@@ -4,21 +4,22 @@ import axios from 'axios';
 class EditCategory extends Component {
   constructor(props) {
     super(props);
+
+    const  { title, image } = this.props.theCategory; 
     this.state = {
-      title: this.props.theCategory.title,
-      image: this.props.theCategory.image
+      title,
+      image
     };
   }
 
-  handleFormSubmit = event => {
-    const { title, image } = this.state;
+  handleFormSubmit(event) {
 
     event.preventDefault();
 
     axios
       .put(
-        `http://localhost:5000/api/categories/${this.props.theCategory._id}`,
-        { title, image },
+        process.env.REACT_APP_SERVER_URL + `/api/edit-category/${this.props.theCategory._id}`,
+        this.state,
         { withCredentials: true }
       )
       .then(() => {

@@ -17,7 +17,7 @@ class Signup extends Component {
     event.preventDefault();
 
     axios
-      .post('http:localhost:5000/api/signup',
+      .post(process.env.REACT_APP_SERVER_URL + '/api/signup',
       this.state, {
         withCredentials: true
       })
@@ -76,7 +76,6 @@ class Signup extends Component {
             />
           </label>
 
-          {/* <input type='submit' value='Signup' /> */}
           <button>Signup</button>
         </form>
         {this.state.message && <div>{this.state.message}</div>}

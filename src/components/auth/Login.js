@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import AuthService from './AuthService';
 import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
 
@@ -9,20 +8,26 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      message: null
+      message: null,
     };
-    // this.state = new AuthService();
   }
 
-  handleChange = event => {
+  handleChange(event) {
     const { name, value } = event.target;
     this.setState({ [name]: value });
   };
 
-  handleFormSubmit = event => {
+  handleFormSubmit(event) {
     event.preventDefault();
-
-    axios.post('http://localhost:5000/api/login', this.state, {
+    // const { email, password } = this.state;
+    // this.service
+    //   .login(email, password)
+    //   .then(response => {
+    //     this.setState({ email: '', password: '' });
+    //     this.props.getUser(response);
+    //   })
+    //   .catch(error => console.log(error));
+    axios.post(process.env.REACT_APP_SERVER_URL + '/api/login', this.state, {
       withCredentials: true
     })
     .then(response => {
@@ -42,10 +47,10 @@ class Login extends Component {
 
   render() {
     if (this.props.currentUser) {
-      return <Redirect to='/' />
+      return <Redirect to='/categories' />
     }
     return (
-      <section className='LoginPage'>
+      <section>
         <h2>Login</h2>
         <form onSubmit={event => this.handleFormSubmit(event)}>
           <label>Email</label>

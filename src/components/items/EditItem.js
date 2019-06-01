@@ -6,7 +6,6 @@ import axios from 'axios';
 class EditItem extends Component {
   constructor(props) {
     super(props);
-    // console.log(this.props.thePhone)
     const { itemName, image, quantity, price, } = this.props.theItem;
     this.state = {
       itemName: '',
@@ -45,7 +44,7 @@ class EditItem extends Component {
       )
       .then(response => {
         //   instead of using <Redirect /> we use this.props.history.push()
-        this.props.history.push('/item-list');
+        this.props.history.push('/items');
       })
       .catch(err => {
         console.log('Update Item ERROR', err);

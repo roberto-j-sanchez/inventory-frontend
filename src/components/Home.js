@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
+import Background from '../images/home_inventory.jpg';
 
 class Home extends Component {
   render() { 
-    return ( 
+    return (
       <section>
-        <h3> Welcome to allMine! A simple to use inventory manager! </h3>
+        <div class="background-image">
+          <h1 class="main-title"> Welcome to allMine! A simple to use inventory manager! </h1>
+        </div>
       </section>
-     );
+    );
   }
 }
  

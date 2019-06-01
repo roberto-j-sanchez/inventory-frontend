@@ -1,48 +1,54 @@
 import React, { Component } from 'react';
-import './App.css';
-import { Switch, NavLink, Route } from 'react-router-dom';
 import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { Switch, NavLink, Route } from 'react-router-dom';
 
-// import AuthService from './components/auth/AuthService';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import './App.css';
+
 import Signup from './components/auth/Signup';
 import Login from './components/auth/Login';
-import ProtectedRoute from './components/auth/ProtectedRoute';
 import Home from './components/Home';
-import NotFound from './components/auth/NotFound';
+import NavBar from './components/navbar/Navbar';
 
+import AddCategory from './components/categories/AddCategory';
 import CategoryList from './components/categories/CategoryList';
 import CategoryDetails from './components/categories/CategoryDetails';
+
+import NotFound from './components/auth/NotFound';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { currentUser: null };
+
+    this.state = {
+      currentUser: null
+    };
   }
 
   componentDidMount() {
+    // React doesn't know at the start if we are logged-in or not
+    // (but we can ask the server if we are through an API request)
     axios
       .get(
-        process.env.REACT_APP_SERVER_URL + '/api/loggedin', 
-        {
-        withCredentials: true
-        })
+        process.env.REACT_APP_SERVER_URL + '/api/checkuser',
+        { withCredentials: true } // FORCE axios to send cookies across domains
+      )
       .then(response => {
-        // console.log('Check user', response.data);
+        // console.log("Check User", response.data);
         const { userDoc } = response.data;
         this.syncCurrentUser(userDoc);
       })
       .catch(err => {
         console.log('Check User ERROR', err);
+        alert('Sorry! Something went wrong.');
       });
   }
 
-  // method for updating currentUser
-  syncCurrentUser = userDoc => {
-    this.setState({
-      currentUser: userDoc
-    });
-  };
+  // this is the method for updating "currentUser"
+  // (must be defined in App.js since it's the owner of "currentUser" now)
+  syncCurrentUser(userDoc) {
+    this.setState({ currentUser: userDoc });
+  }
 
   logoutClick() {
     axios
@@ -61,65 +67,78 @@ class App extends Component {
   }
 
   render() {
+    return (
+      <div className='App'>
+        <NavBar />
+        <header>
+          <nav>
+            {/* <NavLink exact to="/">Home</NavLink> */}
 
-      return (
-        <div className='App'>
-          <header>
-            <h1>allMine</h1>
-            <nav>
-              {this.state.currentUser ? (
-                <span>
-                  <NavLink to='/'>Home</NavLink>
-                  <NavLink to='/categories'>Categories</NavLink>
-                  <NavLink to='/categories/:id'>Category Details</NavLink>
+            {this.state.currentUser ? (
+              <span>
+                {/* <NavLink to="/user-profile">User Profile</NavLink> */}
+                <NavLink to='/'>Home</NavLink>
+                <NavLink to='/add-category'>Add Category </NavLink>
+                <NavLink to='/categories'>Categories</NavLink>
 
-                  {/* <b>{this.currentUser.fullName}</b> */}
-                  <button onClick={() => this.logoutClick()}>
-                    Log Out
-                  </button>
-                </span>
-              ) : (
-                <span>
-                  <NavLink to='/signup'>Signup</NavLink>
-                  <NavLink to='/login'>Log In</NavLink>
-                </span>
-              )}
-            </nav>
-          </header>
-          <Switch>
-            <Route exact path='/' component={Home} />
-            <Route path='/categories' component={CategoryList} />
-            <Route path='/categories/:id' component={CategoryDetails} />
-            <Route
-              path='/signup'
-              render={() => (
-                <Signup
-                  currentUser={this.state.currentUser}
-                  onUserChange={userDoc => this.syncCurrentUser(userDoc)}
-                />
-              )}
-            />
-            <Route
-              path='/login'
-              render={() => (
-                <Login
-                  currentUser={this.state.currentUser}
-                  onUserChange={userDoc => this.syncCurrentUser(userDoc)}
-                />
-              )}
-            />
+                <br />
+                <b>{this.state.currentUser.email}</b>
+                <button onClick={() => this.logoutClick()}>Log Out</button>
+              </span>
+            ) : (
+              <span>
+                <NavLink to='/signup'>Signup </NavLink>
+                <NavLink to='/login'>Login </NavLink>
+              </span>
+            )}
+          </nav>
+        </header>
+        <Switch>
+          <Route exact path='/' component={Home} />
 
-            <Route component={NotFound} />
-          </Switch>
+          <Route path='/categories' component={CategoryList} />
+          <Route
+            path='/categories/:categoryId'
+            component={CategoryDetails}
+          />
 
-          <footer>
-            <p>Made at Ironhack</p>
-          </footer>
-        </div>
-      );
-    }
+          {/* <Route path="/add-phone" component={AddPhone} /> */}
+          <Route
+            path='/add-category'
+            render={() => (
+              <AddCategory currentUser={this.state.currentUser} />
+            )}
+          />
 
-  
+          <Route
+            path='/signup'
+            render={() => (
+              <Signup
+                currentUser={this.state.currentUser}
+                onUserChange={userDoc => this.syncCurrentUser(userDoc)}
+              />
+            )}
+          />
+          <Route
+            path='/login'
+            render={() => (
+              <Login
+                currentUser={this.state.currentUser}
+                onUserChange={userDoc => this.syncCurrentUser(userDoc)}
+              />
+            )}
+          />
+
+          {/* 404 route ALWAYS LAST */}
+          <Route component={NotFound} />
+        </Switch>
+
+        <footer>
+          <p>Made at Ironhack</p>
+        </footer>
+      </div>
+    );
+  }
 }
 
 export default App;
