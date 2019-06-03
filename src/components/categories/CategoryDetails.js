@@ -6,26 +6,19 @@ import EditCategory from './EditCategory';
 import AddItem from '../items/AddItem';
 
 class CategoryDetails extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showEdit: false,
-      // we need the initial "items" array to avoid an error with ".map()"
-      items: []
-    };
-  }
+  state = {};
 
   componentDidMount() {
     this.getSingleCategory();
   }
 
   getSingleCategory = () => {
-    console.log('******______******', this.props.match);
+    // console.log('******______******', this.props.match);
     const { params } = this.props.match;
     axios
       .get(
         process.env.REACT_APP_SERVER_URL +
-          `/api/categories/${params.categoryId}`
+          `/api/categories/${params.id}`
       )
       // .then(responseFromApi => {
       //   console.log('888888888888', this.state)
@@ -33,16 +26,13 @@ class CategoryDetails extends Component {
       //   this.setState(theCategory);
       // })
       .then(responseFromApi => {
-        this.setState(responseFromApi.data);
+        const theCategory = responseFromApi.data;
+        this.setState(theCategory);
       })
       .catch(err => {
         console.log(err);
       });
   };
-
-  showEditForm() {
-    this.setState({ showEdit: true });
-  }
 
   renderEditForm() {
     // this.setState({ showEdit: true })
@@ -59,12 +49,12 @@ class CategoryDetails extends Component {
     }
   }
 
-  deleteCategory(id) {
-    // const { params } = this.props.match;
+  deleteCategory = () => {
+    const { params } = this.props.match;
 
     axios
       .delete(
-        process.env.REACT_APP_SERVER_URL + `/api/categories/${id}`,
+        process.env.REACT_APP_SERVER_URL + `/api/categories/${params.id}`,
         {
           withCredentials: true
         }
@@ -105,24 +95,26 @@ class CategoryDetails extends Component {
   };
 
   render() {
-    const { title, image, items } = this.state;
-    console.log('****************', this.state);
     return (
       <section>
-        {this.state.showEdit ? (
-          <EditCategory theCategory={this.state}
-          {...this.props} />
-        ) : (
-          <section>
-            <h2>{title}</h2>
-          </section>
-        )
-        
-          })}
+        <h1>{this.state.title}</h1>
+        <img width='150' src={this.state.image} alt={this.state.title} />
+        {this.state.items && this.state.items.length > 0 && <h3>Items</h3>}
+        {this.state.items && this.state.items.map((item, index) => {
+          return (
+            <div key={index}>
+              <Link to={`/categories/${this.state._id}/items/${item._id}`}>
+                {item.title}
+              </Link>
+            </div>
+          )
+        })}
         <div>{this.ownershipCheck(this.state)}</div>
         <div>{this.renderAddItemForm()}</div>
         {/* <div>{this.renderEditForm()}</div> */}
-        <button onClick={() => this.deleteCategory()}>Delete Category</button>
+        <button onClick={() => this.deleteCategory()}>
+          Delete Category
+        </button>
         <br />
         <Link to={'/categories'}>Back to Categories</Link>
         <Link to={'/categories/:id'}>Details</Link>

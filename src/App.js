@@ -80,6 +80,13 @@ class App extends Component {
                 <NavLink to='/'>Home</NavLink>
                 <NavLink to='/add-category'>Add Category </NavLink>
                 <NavLink to='/categories'>Categories</NavLink>
+                <Switch>
+                  <Route 
+                    user={this.state.currentUser}
+                    path='/categories/:id'
+                    component={CategoryDetails}
+                  />
+                </Switch>
 
                 <br />
                 <b>{this.state.currentUser.email}</b>
@@ -88,7 +95,8 @@ class App extends Component {
             ) : (
               <span>
                 <NavLink to='/signup'>Signup </NavLink>
-                <NavLink to='/login'>Login </NavLink>
+                <NavLink to='/login'>Login </NavLink>{' '}
+                <NavLink to='/add-category'>Add Category </NavLink>
               </span>
             )}
           </nav>
