@@ -1,6 +1,29 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Link, Redirect } from 'react-router-dom';
+import {  Redirect } from 'react-router-dom';
+
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
+
+function BuiltAtIronhack() {
+  return (
+    <Typography variant='body2' color='textSecondary' align='center'>
+      {'Built at '}
+      <Link color='inherit' href='https://www.ironhack.com/en/locations/miami'>
+        Ironhack
+      </Link>
+      {' Miami.'}
+    </Typography>
+  );
+}
 
 class Login extends Component {
   constructor(props) {
@@ -19,14 +42,7 @@ class Login extends Component {
 
   handleFormSubmit(event) {
     event.preventDefault();
-    // const { email, password } = this.state;
-    // this.service
-    //   .login(email, password)
-    //   .then(response => {
-    //     this.setState({ email: '', password: '' });
-    //     this.props.getUser(response);
-    //   })
-    //   .catch(error => console.log(error));
+
     axios.post(process.env.REACT_APP_SERVER_URL + '/api/login', this.state, {
       withCredentials: true
     })
@@ -50,32 +66,77 @@ class Login extends Component {
       return <Redirect to='/categories' />
     }
     return (
-      <section>
-        <h2>Login</h2>
-        <form onSubmit={event => this.handleFormSubmit(event)}>
-          <label>Email</label>
-          <input
-            type='email'
-            name='email'
-            value={this.state.email}
-            onChange={event => this.handleChange(event)}
-          />
-
-          <label>Password</label>
-          <input
-            type='password'
-            name='password'
-            value={this.state.password}
-            onChange={event => this.handleChange(event)}
-          />
-
-          <button>Log In</button>
-        </form>
-        {this.state.message && <div> {this.state.message} </div>}
-        <p>
-          Don't have an account?  <Link to={'/signup'}> Signup </Link>
-        </p>
-      </section>
+      <Container component='main' maxWidth='xs'>
+        <CssBaseline />
+        <div className='paper'>
+          <Avatar className='avatar'>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component='h1' variant='h5'>
+            Login
+          </Typography>
+          <form
+            className='form'
+            noValidate
+            onSubmit={event => this.handleFormSubmit(event)}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  type='email'
+                  value={this.state.email}
+                  onChange={event => this.handleChange(event)}
+                  variant='outlined'
+                  required
+                  fullWidth
+                  id='email'
+                  label='Email Address'
+                  name='email'
+                  autoComplete='email'
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  value={this.state.password}
+                  onChange={e => this.handleChange(e)}
+                  variant='outlined'
+                  required
+                  fullWidth
+                  name='password'
+                  label='Password'
+                  type='password'
+                  id='password'
+                  autoComplete='current-password'
+                />
+              </Grid>
+            </Grid>
+            <br />
+            <Button
+              type='submit'
+              fullWidth
+              variant='contained'
+              color='primary'
+              className='submit'
+            >
+              Log In
+            </Button>
+            <br /> <br />
+            <div className='message'>
+              {this.state.message && <div>{this.state.message}</div>}
+            </div>
+            <Grid container justify='flex-end'>
+              <Grid item>
+                <Link href='/signup' variant='body2'>
+                  Don't have an account? Sign Up
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+        <Box mt={5}>
+          <BuiltAtIronhack />
+        </Box>
+      </Container>
     );
   }
 }

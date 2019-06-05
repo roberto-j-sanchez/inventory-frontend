@@ -141,9 +141,6 @@ class App extends Component {
           <Route component={NotFound} />
         </Switch>
 
-        <footer>
-          <p>Made at Ironhack</p>
-        </footer>
       </div>
     );
   }

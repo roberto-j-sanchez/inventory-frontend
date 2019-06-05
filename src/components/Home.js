@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Background from '../images/home_inventory.jpg';
 
 class Home extends Component {
   render() { 

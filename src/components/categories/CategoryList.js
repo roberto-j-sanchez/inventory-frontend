@@ -29,6 +29,16 @@ class CategoryList extends Component {
   }
 
   render() {
+    if (this.props.currentUser) {
+      return (
+        <section>
+          <h3>
+            <p>Welcome, {this.props.currentUser.fullName}</p>
+          </h3>
+        </section>
+      );
+    }
+
     const { listOfCategories } = this.state;
     console.log('what is going on: ', this.state)
     return (
