@@ -36,7 +36,6 @@ class Signup extends Component {
       email: '', 
       password: '', 
       message: null,
-      submitSuccessful: false
      };
   }
 
@@ -67,7 +66,6 @@ class Signup extends Component {
   };
 
   render() {
-    const submitSuccessful = this.state.submitSuccessful;
     if (this.props.currentUser) {
       return <Redirect to='/categories' />;
     }

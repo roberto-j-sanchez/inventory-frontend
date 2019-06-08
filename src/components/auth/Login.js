@@ -93,6 +93,7 @@ class Login extends Component {
                   label='Email Address'
                   name='email'
                   autoComplete='email'
+                  autoFocus
                 />
               </Grid>
               <Grid item xs={12}>
